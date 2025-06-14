@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     // Mostrar formulario de registro
-    public function showRegisterForm()
+    public function showRegister()
     {
         return view('auth.register');
     }
@@ -21,8 +21,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'username' => 'required|string|max:50',
-            'email' => 'required|email|unique:users,email',
+            'name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email|unique:users,email_verified_at,NULL',
             'password' => 'required|string|min:6|confirmed',
             'g-recaptcha-response' => ['required', function ($attribute, $value, $fail) {
                 $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
@@ -36,7 +36,7 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
-            'username' => $request->username,
+            'name' => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
