@@ -10,19 +10,23 @@ class ContactController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:100',
-            'email' => 'required|email',
+            'email' => 'required|email|max:100',
+            'phone' => 'required|string|max:20',
+            'subject' => 'required|string|max:150',
             'message' => 'required|string|max:1000',
         ]);
 
         $details = [
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'subject' => $request->subject,
             'messageContent' => $request->message,
         ];
 
         Mail::send('emails.contact', $details, function($message) use ($request) {
-            $message->to('**TU_CORREO_AQUI**')
-                    ->subject('Nuevo mensaje de contacto desde tu sitio web');
+            $message->to('angeljaredchaveztorres@gmail.com')
+                    ->subject('Nuevo mensaje de contacto: ' . $request->subject);
         });
 
         return back()->with('success', 'Mensaje enviado correctamente. ¡Gracias por contactarnos!');

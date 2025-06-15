@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\CarController;
 use App\Models\Car;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\PasswordResetController;
 
 Route::view('/', 'home')->name('home');
 
@@ -65,4 +67,8 @@ Route::view('/contact', 'contact')->name('contact');
 Route::view('/chat', 'chat')->name('chat');
 Route::view('/password-recovery', 'password-recovery')->name('password.recovery');
 Route::view('/search', 'search')->name('search');
+
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
+Route::post('/password/email', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
+Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
 

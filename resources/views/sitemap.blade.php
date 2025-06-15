@@ -1,17 +1,38 @@
 @extends('layouts.app')
 @section('content')
 <h1>Mapa del Sitio</h1>
-<ul>
-    <li><a href="{{ route('home') }}">Inicio</a></li>
-    <li><a href="{{ route('cars.index') }}">Gestión de Autos</a></li>
-    <li><a href="{{ route('register') }}">Registrar</a></li>
-    <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
-    <li><a href="{{ route('mailbox') }}">Buzón</a></li>
-    <li><a href="{{ route('help') }}">Ayuda</a></li>
-    <li><a href="{{ route('contact') }}">Contáctanos</a></li>
-    <li><a href="{{ route('sitemap') }}">Mapa del Sitio</a></li>
-    <li><a href="{{ route('password.recovery') }}">Recuperación de Contraseña</a></li>
-    <li><a href="{{ route('chat') }}">Chat</a></li>
-    <li><a href="{{ route('search') }}">Búsqueda</a></li>
-</ul>
+<div class="sitemap-carousel">
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/home.png" alt="Inicio">
+    <a href="{{ route('home') }}">Inicio</a>
+  </div>
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/car.png" alt="Gestión de Autos">
+    <a href="{{ route('cars.index') }}">Gestión de Autos</a>
+  </div>
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/add-user-group-man-man.png" alt="Registrar">
+    <a href="{{ route('register') }}">Registrar</a>
+  </div>
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/lock-2.png" alt="Iniciar Sesión">
+    <a href="{{ route('login') }}">Iniciar Sesión</a>
+  </div>
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/help.png" alt="Ayuda">
+    <a href="{{ route('home') }}#tawk-chatbot" id="ayuda-link">Ayuda</a>
+  </div>
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/secured-letter.png" alt="Contáctanos">
+    <a href="{{ route('contact') }}">Contáctanos</a>
+  </div>
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/password-reset.png" alt="Recuperación de Contraseña">
+    <a href="{{ route('password.recovery') }}">Recuperar de Contraseña</a>
+  </div>
+  <div class="sitemap-card">
+    <img src="https://img.icons8.com/ios-filled/100/007bff/search--v1.png" alt="Búsqueda">
+    <a href="{{ route('cars.index') }}#car-search">Búsqueda</a>
+  </div>
+</div>
 @endsection 
