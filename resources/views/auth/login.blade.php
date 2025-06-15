@@ -20,11 +20,11 @@
             @csrf
             <div>
                 <label for="email">Correo electrónico</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus>
+                <input type="email" name="email" id="email" value="{{ old('email') }}" autofocus>
             </div>
             <div>
                 <label for="password">Contraseña</label>
-                <input type="password" name="password" id="password" required>
+                <input type="password" name="password" id="password">
             </div>
             <div>
                 <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>

@@ -72,3 +72,9 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 Route::post('/password/email', [PasswordResetController::class, 'sendResetLink'])->name('password.email');
 Route::post('/password/reset', [PasswordResetController::class, 'reset'])->name('password.update');
 
+// Password reset link (GET)
+Route::get('/password/reset/{token}', function ($token) {
+    $email = request('email');
+    return view('password-recovery', compact('token', 'email'));
+})->name('password.reset');
+

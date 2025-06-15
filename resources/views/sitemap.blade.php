@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <h1>Mapa del Sitio</h1>
-<div class="sitemap-carousel">
+<div class="sitemap-carousel" style="padding-left: 64px; padding-right: 64px;">
   <div class="sitemap-card">
     <img src="https://img.icons8.com/ios-filled/100/007bff/home.png" alt="Inicio">
     <a href="{{ route('home') }}">Inicio</a>
@@ -27,8 +27,8 @@
     <a href="{{ route('contact') }}">Contáctanos</a>
   </div>
   <div class="sitemap-card">
-    <img src="https://img.icons8.com/ios-filled/100/007bff/password-reset.png" alt="Recuperación de Contraseña">
-    <a href="{{ route('password.recovery') }}">Recuperar de Contraseña</a>
+    <img src="https://img.icons8.com/ios-filled/100/007bff/password.png" alt="Recuperar Contraseña">
+    <a href="{{ route('password.recovery') }}">Recuperar Contraseña</a>
   </div>
   <div class="sitemap-card">
     <img src="https://img.icons8.com/ios-filled/100/007bff/search--v1.png" alt="Búsqueda">

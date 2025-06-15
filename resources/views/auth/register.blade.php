@@ -20,19 +20,19 @@
             @csrf
             <div>
                 <label for="name">Nombre</label>
-                <input type="text" name="name" id="name" value="{{ old('name') }}" required autofocus>
+                <input type="text" name="name" id="name" value="{{ old('name') }}" autofocus>
             </div>
             <div>
                 <label for="email">Correo electrónico</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" required>
+                <input type="email" name="email" id="email" value="{{ old('email') }}">
             </div>
             <div>
                 <label for="password">Contraseña</label>
-                <input type="password" name="password" id="password" required>
+                <input type="password" name="password" id="password">
             </div>
             <div>
                 <label for="password_confirmation">Confirmar contraseña</label>
-                <input type="password" name="password_confirmation" id="password_confirmation" required>
+                <input type="password" name="password_confirmation" id="password_confirmation">
             </div>
             <div>
                 <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
