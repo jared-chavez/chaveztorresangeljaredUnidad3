@@ -21,43 +21,34 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Cars
+// Car Management Routes
 
-// API routes for cars
+// API routes for cars (AJAX/React endpoints)
 Route::prefix('api')->group(function () {
-    Route::apiResource('cars', CarController::class);
+    // Public API endpoints
+    Route::post('/login', [AuthController::class, 'apiLogin']);
+    Route::post('/register', [AuthController::class, 'apiRegister']);
+
+    // Protected API endpoints
+    Route::middleware(['auth'])->group(function () {
+        Route::apiResource('cars', CarController::class);
+        Route::post('/logout', [AuthController::class, 'apiLogout']);
+    });
 });
 
-// Web routes for car management
-Route::get('/cars', function () {
-    $cars = Car::all();
-    return view('cars', compact('cars'));
-})->name('cars.index');
-
-Route::post('/cars', function (Illuminate\Http\Request $request) {
-    $validated = $request->validate([
-        'brand' => 'required|string|max:255',
-        'model' => 'required|string|max:255',
-        'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
-    ]);
-    Car::create($validated);
-    return redirect()->route('cars.index')->with('success', 'Auto agregado correctamente.');
-})->name('cars.store');
-
-Route::put('/cars/{car}', function (Illuminate\Http\Request $request, Car $car) {
-    $validated = $request->validate([
-        'brand' => 'required|string|max:255',
-        'model' => 'required|string|max:255',
-        'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
-    ]);
-    $car->update($validated);
-    return redirect()->route('cars.index')->with('success', 'Auto actualizado correctamente.');
-})->name('cars.update');
-
-Route::delete('/cars/{car}', function (Car $car) {
-    $car->delete();
-    return redirect()->route('cars.index')->with('success', 'Auto eliminado correctamente.');
-})->name('cars.destroy');
+// Vehiculos (Cars) routes only for authenticated users
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cars', function () {
+        $cars = Car::all();
+        return view('cars', compact('cars'));
+    })->name('cars.index');
+    Route::get('/cars-ajax', function () {
+        return view('cars-ajax');
+    })->name('cars.ajax');
+    Route::get('/cars-react', function () {
+        return view('cars-react');
+    })->name('cars.react');
+});
 
 // Additional required pages
 Route::view('/sitemap', 'sitemap')->name('sitemap');
@@ -67,6 +58,8 @@ Route::view('/contact', 'contact')->name('contact');
 Route::view('/chat', 'chat')->name('chat');
 Route::view('/password-recovery', 'password-recovery')->name('password.recovery');
 Route::view('/search', 'search')->name('search');
+Route::view('/services', 'services')->name('services');
+Route::view('/financiamiento', 'financiamiento')->name('financiamiento');
 
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 Route::post('/password/email', [PasswordResetController::class, 'sendResetLink'])->name('password.email');

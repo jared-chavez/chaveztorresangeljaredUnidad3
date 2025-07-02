@@ -25,7 +25,14 @@ class CarController extends Controller
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'modelImg' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        if ($request->hasFile('modelImg')) {
+            $path = $request->file('modelImg')->store('cars', 'public');
+            $validated['modelImg'] = '/storage/' . $path;
+        }
+
         $car = Car::create($validated);
         return response()->json($car, 201);
     }
@@ -55,7 +62,14 @@ class CarController extends Controller
             'brand' => 'sometimes|required|string|max:255',
             'model' => 'sometimes|required|string|max:255',
             'year' => 'sometimes|required|integer|min:1900|max:' . (date('Y') + 1),
+            'modelImg' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
+
+        if ($request->hasFile('modelImg')) {
+            $path = $request->file('modelImg')->store('cars', 'public');
+            $validated['modelImg'] = '/storage/' . $path;
+        }
+
         $car->update($validated);
         return response()->json($car);
     }

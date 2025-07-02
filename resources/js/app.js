@@ -10,10 +10,10 @@ import "./bootstrap";
     }
 })();
 
-// === Validation rules ===
+// === Validation rules (exported for React components) ===
 const deniedStrings = ["admin", "root", "test", "forbidden"]; // Example denied words
 
-function validateInput(input, form) {
+export function validateInput(input, form) {
     const type = input.getAttribute("data-type") || input.type;
     const value = input.value.trim();
     let valid = true,
@@ -91,7 +91,7 @@ function validateInput(input, form) {
     return { valid, message };
 }
 
-function showError(input, message) {
+export function showError(input, message) {
     input.classList.add("input-error");
     let error = input.parentNode.querySelector(".input-error-message");
     if (!error) {
@@ -106,64 +106,12 @@ function showError(input, message) {
     input.style.borderColor = "#d32f2f";
 }
 
-function clearError(input) {
+export function clearError(input) {
     input.classList.remove("input-error");
     let error = input.parentNode.querySelector(".input-error-message");
     if (error) error.remove();
     input.style.borderColor = "";
 }
-
-// Attach validation to all forms
-window.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll("form").forEach((form) => {
-        form.addEventListener("submit", function (e) {
-            let hasError = false;
-            form.querySelectorAll("input, textarea").forEach((input) => {
-                clearError(input);
-                const { valid, message } = validateInput(input, form);
-                if (!valid) {
-                    showError(input, message);
-                    hasError = true;
-                }
-            });
-            if (hasError) {
-                e.preventDefault();
-                if (window.Swal) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error en el formulario",
-                        text: "Por favor corrige los errores antes de continuar.",
-                    });
-                } else {
-                    alert("Por favor corrige los errores antes de continuar.");
-                }
-                return false;
-            } else {
-                // Show SweetAlert on submit (success)
-                if (window.Swal) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Formulario enviado",
-                        text: "¡Tu información ha sido enviada correctamente!",
-                    });
-                }
-                // Optionally, you can prevent default and only submit after user closes modal
-                // e.preventDefault();
-                // setTimeout(() => form.submit(), 1000);
-            }
-        });
-        // Real-time validation
-        form.querySelectorAll("input, textarea").forEach((input) => {
-            input.addEventListener("input", function () {
-                clearError(input);
-                const { valid, message } = validateInput(input, form);
-                if (!valid) {
-                    showError(input, message);
-                }
-            });
-        });
-    });
-});
 
 // === Add error border style ===
 const style = document.createElement("style");

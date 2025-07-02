@@ -3,37 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoMundo</title>
+    <title>@yield('title', 'AutoMundo - Tu Concesionario de Confianza')</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 </head>
 <body>
-    <nav class="navbar">
-        <a href="{{ route('home') }}" class="navbar-logo" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #007bff;">
-            <span>AutoMundo</span>
-            <span class="footer-icon" style="display: inline-block; vertical-align: middle;">
-                <!-- Simple SVG car icon (copied from footer) -->
-                <svg width="32" height="22" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="10" width="30" height="7" rx="2" fill="#ff9800"/>
-                    <rect x="7" y="6" width="22" height="7" rx="2" fill="#fff" stroke="#ff9800" stroke-width="2"/>
-                    <circle cx="9" cy="19" r="3" fill="#fff" stroke="#ff9800" stroke-width="2"/>
-                    <circle cx="27" cy="19" r="3" fill="#fff" stroke="#ff9800" stroke-width="2"/>
-                </svg>
-            </span>
-        </a>
-        <div class="navbar-links">
-            <a href="{{ route('sitemap') }}">Mapa del Sitio</a>
-            <a href="{{ route('password.recovery') }}">Recuperar Contraseña</a>
-            @auth
-                <span class="navbar-user">Bienvenido, {{ Auth::user()->name ?? Auth::user()->email }}</span>
-                <form action="{{ route('logout') }}" method="POST" class="navbar-logout">
-                    @csrf
-                    <button type="submit">Cerrar sesión</button>
-                </form>
-            @else
-                <a href="{{ route('register') }}" class="btn">Registrar</a>
-                <a href="{{ route('login') }}" class="btn">Iniciar Sesión</a>
-            @endauth
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <div class="top-bar-left">
+                    <span><i class="fas fa-phone"></i> +52 55 1234 5678</span>
+                    <span><i class="fas fa-envelope"></i> info@automundo.mx</span>
+                </div>
+                <div class="top-bar-right">
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <a href="{{ route('home') }}">
+                        <div class="logo-container">
+                            <div class="logo-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="logo-text">
+                                <span class="logo-brand">AutoMundo</span>
+                                <span class="logo-tagline">Tu Concesionario de Confianza</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="nav-menu">
+                    <a href="{{ route('home') }}" class="nav-link">Inicio</a>
+                    @auth
+                        <a href="{{ route('cars.index') }}" class="nav-link">Vehículos</a>
+                    @endauth
+                    <a href="{{ route('services') }}" class="nav-link">Servicios</a>
+                    <a href="{{ route('financiamiento') }}" class="nav-link">Financiamiento</a>
+                    <a href="{{ route('contact') }}" class="nav-link">Contacto</a>
+                </div>
+
+                <div class="nav-actions">
+                    @auth
+                        <div class="user-menu">
+                            <span class="user-greeting">Hola, {{ Auth::user()->name ?? Auth::user()->email }}</span>
+                            <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                                @csrf
+                                <button type="submit" class="btn-logout">
+                                    <i class="fas fa-sign-out-alt"></i> Salir
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline">Iniciar Sesión</a>
+                        <a href="{{ route('register') }}" class="btn btn-primary">Registrarse</a>
+                    @endauth
+                </div>
+
+                <div class="nav-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -41,22 +84,86 @@
         @yield('content')
     </main>
 
+    <!-- Enhanced Footer -->
     <footer class="site-footer">
-        <div class="footer-content">
-            <span class="footer-logo">
-                <span class="footer-icon">
-                    <!-- Simple SVG car icon -->
-                    <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="3" y="10" width="30" height="7" rx="2" fill="#ff9800"/>
-                        <rect x="7" y="6" width="22" height="7" rx="2" fill="#fff" stroke="#ff9800" stroke-width="2"/>
-                        <circle cx="9" cy="19" r="3" fill="#fff" stroke="#ff9800" stroke-width="2"/>
-                        <circle cx="27" cy="19" r="3" fill="#fff" stroke="#ff9800" stroke-width="2"/>
-                    </svg>
-                </span>
-                <span class="footer-brand">AutoMundo</span>
-            </span>
-            <span class="footer-info">© {{ date('Y') }} AutoMundo. Todos los derechos reservados.</span>
-            <span class="footer-contact">Contacto: angeljaredchaveztorres@gmail.com</span>
+        <div class="footer-main">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <div class="footer-logo">
+                            <div class="logo-container">
+                                <div class="logo-icon">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="logo-text">
+                                    <span class="logo-brand">AutoMundo</span>
+                                    <span class="logo-tagline">Tu Concesionario de Confianza</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="footer-description">
+                            Más de 20 años de experiencia en el mercado automotriz, ofreciendo la mejor selección de vehículos y servicio al cliente de excelencia.
+                        </p>
+                        <div class="footer-social">
+                            <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Vehículos</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">Nuevos</a></li>
+                            <li><a href="#">Seminuevos</a></li>
+                            <li><a href="#">Usados</a></li>
+                            <li><a href="#">Financiamiento</a></li>
+                            <li><a href="#">Seguros</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Servicios</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">Mantenimiento</a></li>
+                            <li><a href="#">Reparaciones</a></li>
+                            <li><a href="#">Diagnóstico</a></li>
+                            <li><a href="#">Garantía</a></li>
+                            <li><a href="#">Asistencia Vial</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h3>Contacto</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Av. Insurgentes Sur 1234<br>Col. Del Valle, CDMX</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <span>+52 55 1234 5678</span>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>info@automundo.mx</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <p>&copy; {{ date('Y') }} AutoMundo. Todos los derechos reservados.</p>
+                    <div class="footer-legal">
+                        <a href="#">Términos y Condiciones</a>
+                        <a href="#">Política de Privacidad</a>
+                        <a href="#">Aviso de Privacidad</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -64,7 +171,19 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const logoutForm = document.querySelector('.navbar-logout');
+        // Mobile menu toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (navToggle) {
+            navToggle.addEventListener('click', function() {
+                navMenu.classList.toggle('active');
+                navToggle.classList.toggle('active');
+            });
+        }
+
+        // Logout confirmation
+        const logoutForm = document.querySelector('.logout-form');
         if (logoutForm) {
             logoutForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -84,6 +203,20 @@
                 });
             });
         }
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
     });
     </script>
     @yield('scripts')
