@@ -3,7 +3,7 @@
 @section('content')
 <div class="contact-section">
     <div class="contact-form-container">
-        <h1>Iniciar Sesión</h1>
+        <h1 class="form-title">Iniciar Sesión</h1>
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -19,19 +19,19 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
             <div>
-                <label for="email">Correo electrónico</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}" autofocus>
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" name="email" id="email" value="{{ old('email') }}" autofocus class="form-input">
             </div>
             <div>
-                <label for="password">Contraseña</label>
-                <input type="password" name="password" id="password">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" name="password" id="password" class="form-input">
             </div>
             <div>
                 <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
             </div>
-            <button type="submit">Iniciar sesión</button>
+            <button type="submit" class="form-btn">Iniciar sesión</button>
         </form>
-        <p>¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate</a></p>
+        <p class="form-link">¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate</a></p>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </div>
 </div>

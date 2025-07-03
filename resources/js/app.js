@@ -121,3 +121,108 @@ style.innerHTML = `
 }
 `;
 document.head.appendChild(style);
+
+// === Login/Register Form Validation and Password Toggle ===
+document.addEventListener('DOMContentLoaded', function() {
+    // Helper: show error
+    function showInputError(input, message) {
+        input.classList.add('input-invalid');
+        let error = input.parentNode.querySelector('.input-error');
+        if (!error) {
+            error = document.createElement('div');
+            error.className = 'input-error';
+            error.style.color = '#e60012';
+            error.style.fontSize = '0.97em';
+            error.style.marginTop = '2px';
+            error.style.fontWeight = '500';
+            error.style.letterSpacing = '0.1px';
+        }
+        error.textContent = message;
+        // Insert error message directly after the input
+        if (input.nextSibling) {
+            input.parentNode.insertBefore(error, input.nextSibling);
+        } else {
+            input.parentNode.appendChild(error);
+        }
+    }
+    // Helper: clear error
+    function clearInputError(input) {
+        input.classList.remove('input-invalid');
+        let error = input.parentNode.querySelector('.input-error');
+        if (error) error.remove();
+    }
+    // Validate register form
+    const registerForm = document.querySelector('form[action$="register"]');
+    if (registerForm) {
+        // Add password toggle
+        const passwordInput = registerForm.querySelector('#password');
+        const confirmInput = registerForm.querySelector('#password_confirmation');
+        if (passwordInput && confirmInput) {
+            [passwordInput, confirmInput].forEach(function(input) {
+                const wrapper = input.parentNode;
+                const toggleBtn = document.createElement('button');
+                toggleBtn.type = 'button';
+                toggleBtn.className = 'form-btn-toggle';
+                toggleBtn.style = 'position:absolute; right:18px; top:38px; background:none; border:none; cursor:pointer; color:#E60012; font-size:1.1em;';
+                toggleBtn.innerHTML = '<i class="fa fa-eye"></i>';
+                toggleBtn.setAttribute('aria-label', 'Mostrar/Ocultar contraseña');
+                toggleBtn.addEventListener('click', function() {
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                    toggleBtn.innerHTML = input.type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+                });
+                wrapper.style.position = 'relative';
+                wrapper.appendChild(toggleBtn);
+            });
+        }
+        registerForm.addEventListener('submit', function(e) {
+            let valid = true;
+            // Validate all fields
+            ['name','email','password','password_confirmation'].forEach(function(id) {
+                const input = registerForm.querySelector('#'+id);
+                clearInputError(input);
+                if (!input.value.trim()) {
+                    showInputError(input, 'Este campo es obligatorio.');
+                    valid = false;
+                } else if (id === 'email' && !/^\S+@\S+\.\S+$/.test(input.value.trim())) {
+                    showInputError(input, 'Correo electrónico inválido.');
+                    valid = false;
+                } else if (id === 'password_confirmation') {
+                    const pw = registerForm.querySelector('#password').value;
+                    if (input.value !== pw) {
+                        showInputError(input, 'Las contraseñas no coinciden.');
+                        valid = false;
+                    }
+                }
+            });
+            if (!valid) e.preventDefault();
+        });
+        // Remove error on input
+        ['name','email','password','password_confirmation'].forEach(function(id) {
+            const input = registerForm.querySelector('#'+id);
+            input.addEventListener('input', function() { clearInputError(input); });
+        });
+    }
+    // Validate login form
+    const loginForm = document.querySelector('form[action$="login"]');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            let valid = true;
+            ['email','password'].forEach(function(id) {
+                const input = loginForm.querySelector('#'+id);
+                clearInputError(input);
+                if (!input.value.trim()) {
+                    showInputError(input, 'Este campo es obligatorio.');
+                    valid = false;
+                } else if (id === 'email' && !/^\S+@\S+\.\S+$/.test(input.value.trim())) {
+                    showInputError(input, 'Correo electrónico inválido.');
+                    valid = false;
+                }
+            });
+            if (!valid) e.preventDefault();
+        });
+        ['email','password'].forEach(function(id) {
+            const input = loginForm.querySelector('#'+id);
+            input.addEventListener('input', function() { clearInputError(input); });
+        });
+    }
+});

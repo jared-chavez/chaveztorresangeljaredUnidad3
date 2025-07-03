@@ -71,40 +71,36 @@ const animations = {
     }
 };
 
-// Utility functions
-async function showSuccess(message) {
-    await Swal.close();
-    await Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
+// Replace showSuccess and showError with Toastify for final status notifications
+function showToastSuccess(message) {
+    Toastify({
         text: message,
-        confirmButtonText: 'Aceptar',
-        timer: 3000,
-        timerProgressBar: true,
-        showCloseButton: true,
-        allowOutsideClick: true,
-        allowEscapeKey: true,
-        willClose: () => { Swal.close(); },
-        showClass: { popup: 'animate__animated animate__fadeInDown' },
-        hideClass: { popup: 'animate__animated animate__fadeOutUp' }
-    });
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#27c93f", // green
+        stopOnFocus: true
+    }).showToast();
 }
-
-async function showError(message) {
-    await Swal.close();
-    await Swal.fire({
-        icon: 'error',
-        title: 'Error',
+function showToastError(message) {
+    Toastify({
         text: message,
-        confirmButtonText: 'Aceptar',
-        timer: 3500,
-        timerProgressBar: true,
-        showCloseButton: true,
-        allowOutsideClick: true,
-        allowEscapeKey: true,
-        willClose: () => { Swal.close(); },
-        showClass: { popup: 'animate__animated animate__shakeX' }
-    });
+        duration: 3500,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#d93025", // red
+        stopOnFocus: true
+    }).showToast();
+}
+function showToastWarning(message) {
+    Toastify({
+        text: message,
+        duration: 3500,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#ffc107", // yellow
+        stopOnFocus: true
+    }).showToast();
 }
 
 function showConfirm(title, text, callback) {
@@ -264,11 +260,11 @@ document.getElementById('create-car-form').addEventListener('submit', async func
         this.reset();
         document.getElementById('year').value = new Date().getFullYear();
         modelImgPreview.innerHTML = '';
-        showSuccess(`¡Auto creado exitosamente! ${newCar.brand} ${newCar.model}`);
+        showToastSuccess(`¡Auto creado exitosamente! ${newCar.brand} ${newCar.model}`);
         animations.animateSuccess(submitBtn);
         await loadCars();
     } catch (error) {
-        showError(`Error al crear auto: ${error.message}`);
+        showToastError(`Error al crear auto: ${error.message}`);
     } finally {
         animations.removeLoadingState(submitBtn);
     }
@@ -290,12 +286,12 @@ document.addEventListener('submit', async function(e) {
         
         // Basic validation
         if (!carData.brand || !carData.model || !carData.year) {
-            showError('Por favor completa todos los campos requeridos');
+            showToastError('Por favor completa todos los campos requeridos');
             return;
         }
         
         if (carData.year < 1900 || carData.year > 2030) {
-            showError('El año debe estar entre 1900 y 2030');
+            showToastError('El año debe estar entre 1900 y 2030');
             return;
         }
         
@@ -308,7 +304,7 @@ document.addEventListener('submit', async function(e) {
             const updatedCar = await carApi.updateCar(carId, carData);
             
             // Show success with animation
-            showSuccess(`¡Auto actualizado exitosamente! ${updatedCar.brand} ${updatedCar.model}`);
+            showToastSuccess(`¡Auto actualizado exitosamente! ${updatedCar.brand} ${updatedCar.model}`);
             animations.animateSuccess(submitBtn);
             console.log('Car updated:', updatedCar);
             
@@ -316,7 +312,7 @@ document.addEventListener('submit', async function(e) {
             updateCarCard(carId, updatedCar);
             
         } catch (error) {
-            showError(`Error al actualizar auto: ${error.message}`);
+            showToastError(`Error al actualizar auto: ${error.message}`);
         } finally {
             // Reset button state
             animations.removeLoadingState(submitBtn);
@@ -344,7 +340,7 @@ document.addEventListener('click', async function(e) {
                     await carApi.deleteCar(carId);
                     
                     // Show success with animation
-                    showSuccess('Auto eliminado exitosamente');
+                    showToastSuccess('Auto eliminado exitosamente');
                     animations.animateSuccess(btn);
                     console.log('Car deleted:', carId);
                     
@@ -352,7 +348,7 @@ document.addEventListener('click', async function(e) {
                     removeCarCard(carId);
                     
                 } catch (error) {
-                    showError(`Error al eliminar auto: ${error.message}`);
+                    showToastError(`Error al eliminar auto: ${error.message}`);
                 } finally {
                     // Reset button state
                     animations.removeLoadingState(btn);
@@ -405,7 +401,7 @@ async function loadCars() {
         const cars = await carApi.getAllCars();
         updateCarsContainer(cars);
     } catch (error) {
-        showError(`Error al cargar autos: ${error.message}`);
+        showToastError(`Error al cargar autos: ${error.message}`);
     }
 }
 
@@ -494,8 +490,11 @@ document.addEventListener('click', async function(e) {
                 `<input id="swal-input1" class="swal2-input" placeholder="Marca" value="${brand}">
                  <input id="swal-input2" class="swal2-input" placeholder="Modelo" value="${model}">
                  <input id="swal-input3" class="swal2-input" type="number" min="1900" max="2030" placeholder="Año" value="${year}">
-                 <label style='display:block;margin:10px 0 5px 0;'>Imagen nueva (opcional):</label>
-                 <input id="swal-input4" type="file" accept="image/*" style="display:block;margin-bottom:10px;">
+                 <label for="swal-input4" class="swal2-file-label">
+                   <i class="fa fa-camera"></i> Seleccionar imagen
+                 </label>
+                 <input id="swal-input4" type="file" accept="image/*" class="swal2-file-custom">
+                 <span id="swal-file-name"></span>
                  <div id="swal-img-preview" style="margin-bottom:10px;"></div>`,
             focusConfirm: false,
             showCancelButton: true,
@@ -503,15 +502,21 @@ document.addEventListener('click', async function(e) {
             cancelButtonText: 'Cancelar',
             didOpen: () => {
                 const fileInput = document.getElementById('swal-input4');
+                const fileLabel = document.querySelector('.swal2-file-label');
+                const fileNameSpan = document.getElementById('swal-file-name');
                 const preview = document.getElementById('swal-img-preview');
+                fileLabel.addEventListener('click', () => fileInput.click());
                 fileInput.addEventListener('change', function() {
                     preview.innerHTML = '';
                     if (this.files && this.files[0]) {
+                        fileNameSpan.textContent = this.files[0].name;
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             preview.innerHTML = `<img src="${e.target.result}" alt="Vista previa" style="max-width:120px;max-height:90px;border-radius:10px;box-shadow:0 2px 8px #ccc;">`;
                         };
                         reader.readAsDataURL(this.files[0]);
+                    } else {
+                        fileNameSpan.textContent = '';
                     }
                 });
             },
@@ -527,11 +532,11 @@ document.addEventListener('click', async function(e) {
         if (formValues) {
             const [newBrand, newModel, newYear, newImg] = formValues;
             if (!newBrand || !newModel || !newYear) {
-                showError('Por favor completa todos los campos requeridos');
+                showToastError('Por favor completa todos los campos requeridos');
                 return;
             }
             if (parseInt(newYear) < 1900 || parseInt(newYear) > 2030) {
-                showError('El año debe estar entre 1900 y 2030');
+                showToastError('El año debe estar entre 1900 y 2030');
                 return;
             }
             // Show loading
@@ -554,11 +559,11 @@ document.addEventListener('click', async function(e) {
                     await carApi.updateCar(carId, { brand: newBrand, model: newModel, year: parseInt(newYear) });
                 }
                 Swal.close();
-                showSuccess('¡Auto actualizado exitosamente!');
+                showToastSuccess('¡Auto actualizado exitosamente!');
                 loadCars();
             } catch (error) {
                 Swal.close();
-                showError(`Error al actualizar auto: ${error.message}`);
+                showToastError(`Error al actualizar auto: ${error.message}`);
             }
         }
     }
