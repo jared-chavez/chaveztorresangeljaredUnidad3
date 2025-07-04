@@ -10,10 +10,10 @@ import "./bootstrap";
     }
 })();
 
-// === Validation rules (exported for React components) ===
+// === Validation rules ===
 const deniedStrings = ["admin", "root", "test", "forbidden"]; // Example denied words
 
-export function validateInput(input, form) {
+function validateInput(input, form) {
     const type = input.getAttribute("data-type") || input.type;
     const value = input.value.trim();
     let valid = true,
@@ -91,7 +91,7 @@ export function validateInput(input, form) {
     return { valid, message };
 }
 
-export function showError(input, message) {
+function showError(input, message) {
     input.classList.add("input-error");
     let error = input.parentNode.querySelector(".input-error-message");
     if (!error) {
@@ -106,7 +106,7 @@ export function showError(input, message) {
     input.style.borderColor = "#d32f2f";
 }
 
-export function clearError(input) {
+function clearError(input) {
     input.classList.remove("input-error");
     let error = input.parentNode.querySelector(".input-error-message");
     if (error) error.remove();

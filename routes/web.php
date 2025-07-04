@@ -45,9 +45,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cars-ajax', function () {
         return view('cars-ajax');
     })->name('cars.ajax');
-    Route::get('/cars-react', function () {
-        return view('cars-react');
-    })->name('cars.react');
 });
 
 // Additional required pages
