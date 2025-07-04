@@ -1,61 +1,272 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚗 AutoMundo - Sistema de Gestión de Vehículos
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.icons8.com/ios-filled/100/007bff/car.png" alt="AutoMundo Logo" width="100">
+  <br>
+  <strong>Sistema de Gestión de Vehículos con Laravel</strong>
 </p>
 
-## About Laravel
+## 📋 Descripción
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+AutoMundo es una aplicación web completa para la gestión de vehículos desarrollada con Laravel. Permite a los usuarios administrar un inventario de autos con funcionalidades de creación, edición, eliminación y búsqueda de vehículos.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Características Principales
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🔐 Sistema de Autenticación
+- **Registro de usuarios** con validación de datos
+- **Inicio de sesión** seguro con reCAPTCHA
+- **Recuperación de contraseñas** por email
+- **Protección de rutas** con middleware de autenticación
 
-## Learning Laravel
+### 🚗 Gestión de Vehículos
+- **CRUD completo** de vehículos (Crear, Leer, Actualizar, Eliminar)
+- **Búsqueda en tiempo real** por marca y modelo
+- **Carga de imágenes** para cada vehículo
+- **Validación de formularios** en frontend y backend
+- **Interfaz responsiva** con animaciones suaves
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🎨 Interfaz de Usuario
+- **Diseño moderno** con Tailwind CSS
+- **Animaciones fluidas** para mejor experiencia de usuario
+- **Notificaciones interactivas** con SweetAlert2
+- **Responsive design** para móviles y tablets
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🛠️ Tecnologías Utilizadas
+- **Backend:** Laravel 11 (PHP)
+- **Frontend:** JavaScript vanilla, Tailwind CSS
+- **Base de datos:** SQLite
+- **Autenticación:** Laravel Breeze
+- **Validación:** reCAPTCHA v2
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Instalación
 
-## Laravel Sponsors
+### Requisitos Previos
+- PHP 8.1 o superior
+- Composer
+- Node.js y npm
+- Git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Pasos de Instalación
 
-### Premium Partners
+1. **Clonar el repositorio**
+   ```bash
+   git clone <url-del-repositorio>
+   cd u2dwp_sh
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Instalar dependencias de PHP**
+   ```bash
+   composer install
+   ```
 
-## Contributing
+3. **Instalar dependencias de Node.js**
+   ```bash
+   npm install
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Configurar el archivo de entorno**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Code of Conduct
+5. **Configurar la base de datos**
+   ```bash
+   # Editar .env para configurar SQLite
+   DB_CONNECTION=sqlite
+   DB_DATABASE=/ruta/absoluta/a/database/database.sqlite
+   
+   # Crear archivo de base de datos
+   touch database/database.sqlite
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+6. **Ejecutar migraciones**
+   ```bash
+   php artisan migrate
+   ```
 
-## Security Vulnerabilities
+7. **Compilar assets**
+   ```bash
+   npm run build
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+8. **Iniciar el servidor**
+   ```bash
+   php artisan serve
+   ```
 
-## License
+## 📁 Estructura del Proyecto
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+u2dwp_sh/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Api/CarController.php    # API para gestión de vehículos
+│   │   ├── AuthController.php       # Controlador de autenticación
+│   │   ├── ContactController.php    # Controlador de contacto
+│   │   └── PasswordResetController.php
+│   ├── Models/
+│   │   ├── Car.php                  # Modelo de vehículos
+│   │   └── User.php                 # Modelo de usuarios
+│   └── Rules/
+│       └── Recaptcha.php           # Regla de validación reCAPTCHA
+├── resources/
+│   ├── js/
+│   │   ├── app.js                  # JavaScript principal
+│   │   ├── cars-ajax.js            # Lógica de gestión de vehículos
+│   │   ├── ajax-app.js             # Funciones de prueba AJAX
+│   │   └── services/
+│   │       └── carApi.js           # Servicio API de vehículos
+│   ├── css/
+│   │   └── app.css                 # Estilos principales
+│   └── views/
+│       ├── cars.blade.php          # Vista principal de vehículos
+│       ├── cars-ajax.blade.php     # Vista de pruebas AJAX
+│       ├── auth/                   # Vistas de autenticación
+│       └── layouts/
+│           └── app.blade.php       # Layout principal
+└── routes/
+    └── web.php                     # Rutas de la aplicación
+```
+
+## 🎯 Funcionalidades Detalladas
+
+### Gestión de Vehículos
+- **Agregar vehículo:** Formulario con validación de marca, modelo, año e imagen
+- **Editar vehículo:** Modificación de datos existentes
+- **Eliminar vehículo:** Confirmación antes de eliminar
+- **Buscar vehículos:** Filtrado en tiempo real
+- **Vista de tarjetas:** Presentación visual de vehículos
+
+### Sistema de Autenticación
+- **Registro:** Validación de email, contraseña y reCAPTCHA
+- **Login:** Autenticación segura con redirección
+- **Logout:** Cierre de sesión seguro
+- **Recuperación:** Envío de email para reset de contraseña
+
+### API REST
+- **GET /api/cars** - Obtener todos los vehículos
+- **POST /api/cars** - Crear nuevo vehículo
+- **PUT /api/cars/{id}** - Actualizar vehículo
+- **DELETE /api/cars/{id}** - Eliminar vehículo
+
+## 🔧 Configuración
+
+### Variables de Entorno (.env)
+```env
+APP_NAME="AutoMundo"
+APP_ENV=local
+APP_KEY=base64:...
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=sqlite
+DB_DATABASE=/ruta/absoluta/a/database/database.sqlite
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS="hello@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+RECAPTCHA_SITE_KEY=tu_clave_del_sitio
+RECAPTCHA_SECRET_KEY=tu_clave_secreta
+```
+
+### reCAPTCHA
+Para habilitar reCAPTCHA:
+1. Registrarse en [Google reCAPTCHA](https://www.google.com/recaptcha/)
+2. Obtener las claves pública y secreta
+3. Configurar en el archivo `.env`
+
+## 🧪 Pruebas
+
+### Interfaz de Pruebas AJAX
+Accede a `/cars-ajax` para probar todas las funciones de la API:
+- Crear vehículos de prueba
+- Actualizar datos existentes
+- Eliminar vehículos
+- Probar todas las operaciones CRUD
+
+### Comandos de Artisan
+```bash
+# Ejecutar migraciones
+php artisan migrate
+
+# Revertir migraciones
+php artisan migrate:rollback
+
+# Crear seeders (si existen)
+php artisan db:seed
+
+# Limpiar caché
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+```
+
+## 🎨 Personalización
+
+### Estilos CSS
+Los estilos principales se encuentran en:
+- `resources/css/app.css` - Estilos con Tailwind CSS
+- `public/css/styles.css` - Estilos personalizados
+
+### JavaScript
+La lógica principal está en:
+- `resources/js/cars-ajax.js` - Gestión de vehículos
+- `resources/js/app.js` - Validaciones y utilidades
+
+## 📱 Responsive Design
+
+La aplicación está optimizada para:
+- **Desktop:** Pantallas grandes con layout completo
+- **Tablet:** Adaptación de formularios y grids
+- **Mobile:** Navegación optimizada y formularios simplificados
+
+## 🔒 Seguridad
+
+- **Validación CSRF** en todos los formularios
+- **Sanitización de datos** en el backend
+- **Validación de archivos** para imágenes
+- **Protección reCAPTCHA** contra bots
+- **Middleware de autenticación** en rutas protegidas
+
+## 🚀 Despliegue
+
+### Producción
+1. Configurar variables de entorno para producción
+2. Ejecutar `npm run build` para compilar assets
+3. Configurar servidor web (Apache/Nginx)
+4. Configurar base de datos de producción
+
+### Docker (Opcional)
+```dockerfile
+FROM php:8.2-fpm
+# Configuración de Docker para producción
+```
+
+## 🤝 Contribución
+
+1. Fork el proyecto
+2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abrir un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 📞 Soporte
+
+Para soporte técnico o preguntas:
+- Crear un issue en GitHub
+- Contactar al equipo de desarrollo
+
+---
+
+**Desarrollado con ❤️ usando Laravel** 
