@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(remove: [
             \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
         ]);
+        
+        // Registrar middleware personalizado para roles
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

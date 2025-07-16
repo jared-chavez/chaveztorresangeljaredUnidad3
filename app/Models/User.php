@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -52,5 +53,85 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new \App\Notifications\ResetPasswordNotification($token, $this->email));
+    }
+
+    /**
+     * Check if user has a specific role
+     */
+    public function hasRole($role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Check if user has any of the given roles
+     */
+    public function hasAnyRole($roles): bool
+    {
+        if (is_string($roles)) {
+            return $this->hasRole($roles);
+        }
+
+        return in_array($this->role, $roles);
+    }
+
+    /**
+     * Check if user is admin
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    /**
+     * Check if user is manager
+     */
+    public function isManager(): bool
+    {
+        return $this->hasRole('manager');
+    }
+
+    /**
+     * Check if user is sales
+     */
+    public function isSales(): bool
+    {
+        return $this->hasRole('sales');
+    }
+
+    /**
+     * Check if user is customer
+     */
+    public function isCustomer(): bool
+    {
+        return $this->hasRole('customer');
+    }
+
+    /**
+     * Get user's role display name
+     */
+    public function getRoleDisplayName(): string
+    {
+        return match($this->role) {
+            'admin' => 'Administrador',
+            'manager' => 'Gerente',
+            'sales' => 'Vendedor',
+            'customer' => 'Cliente',
+            default => 'Usuario'
+        };
+    }
+
+    /**
+     * Get dashboard route based on role
+     */
+    public function getDashboardRoute(): string
+    {
+        return match($this->role) {
+            'admin' => '/admin/dashboard',
+            'manager' => '/manager/dashboard',
+            'sales' => '/sales/dashboard',
+            'customer' => '/dashboard',
+            default => '/'
+        };
     }
 }
