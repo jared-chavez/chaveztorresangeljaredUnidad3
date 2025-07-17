@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Administrador - AutoMundo')
+@section('title', 'Dashboard Vendedor - AutoMundo')
 
 @section('content')
 <div class="dashboard-container">
@@ -8,15 +8,12 @@
         <!-- Header del Dashboard -->
         <div class="dashboard-header">
             <div class="dashboard-title">
-                <h1><i class="fas fa-crown"></i> Panel de Administración</h1>
+                <h1><i class="fas fa-chart-line"></i> Panel de Ventas</h1>
                 <p>Bienvenido, {{ Auth::user()->name }} - {{ Auth::user()->getRoleDisplayName() }}</p>
             </div>
             <div class="dashboard-actions">
-                <a href="{{ route('admin.users') }}" class="btn btn-primary">
-                    <i class="fas fa-users"></i> Gestionar Usuarios
-                </a>
-                <a href="{{ route('admin.settings') }}" class="btn btn-outline">
-                    <i class="fas fa-cog"></i> Configuración
+                <a href="{{ route('cars.index') }}" class="btn btn-primary">
+                    <i class="fas fa-car"></i> Ver Inventario
                 </a>
             </div>
         </div>
@@ -25,122 +22,145 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="stat-content">
-                    <h3>{{ \App\Models\User::count() }}</h3>
-                    <p>Total Usuarios</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
                     <i class="fas fa-car"></i>
                 </div>
                 <div class="stat-content">
                     <h3>{{ \App\Models\Car::count() }}</h3>
-                    <p>Vehículos</p>
+                    <p>Vehículos Disponibles</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-chart-line"></i>
+                    <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-content">
-                    <h3>{{ \App\Models\User::where('role', 'sales')->count() }}</h3>
-                    <p>Vendedores</p>
+                    <h3>{{ \App\Models\User::where('role', 'customer')->count() }}</h3>
+                    <p>Clientes Potenciales</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>0</h3>
+                    <p>Ventas del Mes</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>0%</h3>
+                    <p>Comisión del Mes</p>
                 </div>
             </div>
         </div>
 
         <!-- Grid de Tarjetas -->
         <div class="dashboard-grid">
-            <!-- Gestión de Usuarios -->
+            <!-- Inventario de Vehículos -->
             <div class="dashboard-card">
                 <div class="card-header">
-                    <h3><i class="fas fa-users-cog"></i> Gestión de Usuarios</h3>
+                    <h3><i class="fas fa-car"></i> Inventario de Vehículos</h3>
                 </div>
                 <div class="card-content">
-                    <div class="user-stats">
-                        <div class="user-stat">
-                            <span class="stat-label">Administradores:</span>
-                            <span class="stat-value">{{ \App\Models\User::where('role', 'admin')->count() }}</span>
+                    <div class="inventory-stats">
+                        <div class="inventory-stat">
+                            <span class="stat-label">Total de Vehículos:</span>
+                            <span class="stat-value">{{ \App\Models\Car::count() }}</span>
                         </div>
-                        <div class="user-stat">
-                            <span class="stat-label">Vendedores:</span>
-                            <span class="stat-value">{{ \App\Models\User::where('role', 'sales')->count() }}</span>
+                        <div class="inventory-stat">
+                            <span class="stat-label">Disponibles:</span>
+                            <span class="stat-value">{{ \App\Models\Car::count() }}</span>
                         </div>
-                        <div class="user-stat">
-                            <span class="stat-label">Clientes:</span>
-                            <span class="stat-value">{{ \App\Models\User::where('role', 'customer')->count() }}</span>
+                        <div class="inventory-stat">
+                            <span class="stat-label">Reservados:</span>
+                            <span class="stat-value">0</span>
                         </div>
                     </div>
                     <div class="card-actions">
-                        <a href="{{ route('admin.users') }}" class="btn btn-primary">Ver Todos</a>
+                        <a href="{{ route('cars.index') }}" class="btn btn-primary">Ver Inventario</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Actividad del Sistema -->
+            <!-- Actividad Reciente -->
             <div class="dashboard-card">
                 <div class="card-header">
-                    <h3><i class="fas fa-chart-bar"></i> Actividad del Sistema</h3>
+                    <h3><i class="fas fa-clock"></i> Actividad Reciente</h3>
                 </div>
                 <div class="card-content">
                     <div class="activity-list">
                         <div class="activity-item">
                             <div class="activity-icon">
-                                <i class="fas fa-user-plus"></i>
+                                <i class="fas fa-car"></i>
                             </div>
                             <div class="activity-details">
-                                <p><strong>Nuevo usuario registrado</strong></p>
-                                <small>Hace 5 minutos</small>
+                                <p><strong>Nuevo vehículo agregado</strong></p>
+                                <small>Hace 2 horas</small>
                             </div>
                         </div>
                         <div class="activity-item">
                             <div class="activity-icon">
-                                <i class="fas fa-car"></i>
+                                <i class="fas fa-user"></i>
                             </div>
                             <div class="activity-details">
-                                <p><strong>Vehículo agregado al inventario</strong></p>
-                                <small>Hace 15 minutos</small>
+                                <p><strong>Cliente interesado en Toyota Camry</strong></p>
+                                <small>Hace 1 día</small>
                             </div>
                         </div>
-
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p><strong>Llamada de seguimiento realizada</strong></p>
+                                <small>Hace 2 días</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Configuración del Sistema -->
+            <!-- Clientes Potenciales -->
             <div class="dashboard-card">
                 <div class="card-header">
-                    <h3><i class="fas fa-cogs"></i> Configuración</h3>
+                    <h3><i class="fas fa-users"></i> Clientes Potenciales</h3>
                 </div>
                 <div class="card-content">
-                    <div class="config-options">
-                        <div class="config-item">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Configuración de Seguridad</span>
+                    <div class="clients-list">
+                        <div class="client-item">
+                            <div class="client-info">
+                                <strong>Juan Pérez</strong>
+                                <small>Interesado en SUV</small>
+                            </div>
+                            <div class="client-status">
+                                <span class="status-badge hot">Caliente</span>
+                            </div>
                         </div>
-                        <div class="config-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>Configuración de Email</span>
+                        <div class="client-item">
+                            <div class="client-info">
+                                <strong>María García</strong>
+                                <small>Buscando vehículo familiar</small>
+                            </div>
+                            <div class="client-status">
+                                <span class="status-badge warm">Tibio</span>
+                            </div>
                         </div>
-                        <div class="config-item">
-                            <i class="fas fa-database"></i>
-                            <span>Respaldo de Base de Datos</span>
-                        </div>
-                        <div class="config-item">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Logs del Sistema</span>
+                        <div class="client-item">
+                            <div class="client-info">
+                                <strong>Carlos López</strong>
+                                <small>Interesado en deportivo</small>
+                            </div>
+                            <div class="client-status">
+                                <span class="status-badge cold">Frío</span>
+                            </div>
                         </div>
                     </div>
                     <div class="card-actions">
-                        <a href="{{ route('admin.settings') }}" class="btn btn-primary">Configurar</a>
+                        <a href="#" class="btn btn-primary">Ver Todos</a>
                     </div>
                 </div>
             </div>
@@ -154,19 +174,11 @@
                     <div class="quick-actions">
                         <a href="{{ route('cars.index') }}" class="quick-action">
                             <i class="fas fa-car"></i>
-                            <span>Gestionar Vehículos</span>
+                            <span>Ver Inventario</span>
                         </a>
                         <a href="#" class="quick-action">
-                            <i class="fas fa-download"></i>
-                            <span>Generar Reporte</span>
-                        </a>
-                        <a href="#" class="quick-action">
-                            <i class="fas fa-database"></i>
-                            <span>Respaldo</span>
-                        </a>
-                        <a href="{{ route('admin.settings') }}" class="quick-action">
-                            <i class="fas fa-cog"></i>
-                            <span>Configuración</span>
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reporte de Ventas</span>
                         </a>
                     </div>
                 </div>
@@ -227,7 +239,7 @@
 }
 
 .stat-icon {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
     color: white;
     width: 60px;
     height: 60px;
@@ -263,7 +275,7 @@
 }
 
 .card-header {
-    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
     color: white;
     padding: 1rem 1.5rem;
 }
@@ -277,14 +289,14 @@
     padding: 1.5rem;
 }
 
-.user-stats {
+.inventory-stats {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     margin-bottom: 1rem;
 }
 
-.user-stat {
+.inventory-stat {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem;
@@ -298,7 +310,7 @@
 }
 
 .stat-value {
-    color: #667eea;
+    color: #4ecdc4;
     font-weight: bold;
 }
 
@@ -323,7 +335,7 @@
 }
 
 .activity-icon {
-    color: #e74c3c;
+    color: #4ecdc4;
     font-size: 1.2rem;
 }
 
@@ -336,37 +348,59 @@
     color: #7f8c8d;
 }
 
-.config-options {
+.clients-list {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.config-item {
+.client-item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
     padding: 0.75rem;
     background: #f8f9fa;
     border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
 }
 
-.config-item:hover {
-    background: #e9ecef;
+.client-info strong {
+    display: block;
+    color: #2c3e50;
 }
 
-.config-item i {
-    color: #e74c3c;
-    font-size: 1.2rem;
+.client-info small {
+    color: #7f8c8d;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.status-badge.hot {
+    background: #ff6b6b;
+    color: white;
+}
+
+.status-badge.warm {
+    background: #ffa726;
+    color: white;
+}
+
+.status-badge.cold {
+    background: #90a4ae;
+    color: white;
 }
 
 .quick-actions {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 .quick-action {
@@ -382,7 +416,7 @@
 }
 
 .quick-action:hover {
-    background: #e74c3c;
+    background: #4ecdc4;
     color: white;
     transform: translateY(-2px);
 }
@@ -395,6 +429,40 @@
 .quick-action span {
     font-size: 0.9rem;
     text-align: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #4ecdc4;
+    border: 2px solid #4ecdc4;
+}
+
+.btn-outline:hover {
+    background: #4ecdc4;
+    color: white;
 }
 
 @media (max-width: 768px) {

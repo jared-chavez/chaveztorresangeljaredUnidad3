@@ -7,13 +7,14 @@
     <meta http-equiv="Expires" content="0">
     <?php header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0'); header('Pragma: no-cache'); header('Expires: 0'); ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'AutoMundo - Tu Concesionario de Confianza')</title>
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" type="image/png" href="{{ asset('css/logo.png') }}">
 </head>
-<body>
+<body data-user-role="{{ Auth::check() ? Auth::user()->role : 'guest' }}">
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="container">
@@ -50,18 +51,57 @@
                 
                 <div class="nav-menu">
                     <a href="{{ route('home') }}" class="nav-link">Inicio</a>
+                    
                     @auth
-                        <a href="{{ route('cars.index') }}" class="nav-link">Vehículos</a>
+                        @if(Auth::user()->role === 'admin')
+                            <!-- Navegación para Administrador -->
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                            <a href="{{ route('admin.users') }}" class="nav-link">
+                                <i class="fas fa-users"></i> Usuarios
+                            </a>
+                            <a href="{{ route('admin.settings') }}" class="nav-link">
+                                <i class="fas fa-cog"></i> Configuración
+                            </a>
+                        @elseif(Auth::user()->role === 'sales')
+                            <!-- Navegación para Vendedor -->
+                            <a href="{{ route('sales.dashboard') }}" class="nav-link">
+                                <i class="fas fa-chart-line"></i> Dashboard
+                            </a>
+                            <a href="{{ route('cars.index') }}" class="nav-link">
+                                <i class="fas fa-car"></i> Vehículos
+                            </a>
+                        @elseif(Auth::user()->role === 'customer')
+                            <!-- Navegación para Cliente -->
+                            <a href="{{ route('customer.dashboard') }}" class="nav-link">
+                                <i class="fas fa-user-circle"></i> Mi Panel
+                            </a>
+                            <a href="{{ route('cars.index') }}" class="nav-link">
+                                <i class="fas fa-car"></i> Vehículos
+                            </a>
+                            <a href="{{ route('services') }}" class="nav-link">
+                                <i class="fas fa-tools"></i> Servicios
+                            </a>
+                            <a href="{{ route('financiamiento') }}" class="nav-link">
+                                <i class="fas fa-credit-card"></i> Financiamiento
+                            </a>
+                        @endif
+                    @else
+                        <!-- Navegación para usuarios no autenticados -->
+                        <a href="{{ route('services') }}" class="nav-link">Servicios</a>
+                        <a href="{{ route('financiamiento') }}" class="nav-link">Financiamiento</a>
+                        <a href="{{ route('contact') }}" class="nav-link">Contacto</a>
                     @endauth
-                    <a href="{{ route('services') }}" class="nav-link">Servicios</a>
-                    <a href="{{ route('financiamiento') }}" class="nav-link">Financiamiento</a>
-                    <a href="{{ route('contact') }}" class="nav-link">Contacto</a>
                 </div>
 
                 <div class="nav-actions">
                     @auth
-                        <div class="user-menu">
-                            <span class="user-greeting">Hola, {{ Auth::user()->name ?? Auth::user()->email }}</span>
+                        <div class="user-menu" data-role="{{ Auth::user()->role }}">
+                            <span class="user-greeting">
+                                Hola, {{ Auth::user()->name ?? Auth::user()->email }}
+                                <span class="user-role">{{ Auth::user()->getRoleDisplayName() }}</span>
+                            </span>
                             <form action="{{ route('logout') }}" method="POST" class="logout-form">
                                 @csrf
                                 <button type="submit" class="btn-logout">
@@ -175,6 +215,35 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
+    <style>
+    .user-role {
+        display: block;
+        font-size: 0.8em;
+        color: #667eea;
+        font-weight: 500;
+        margin-top: 2px;
+    }
+    
+    .nav-link i {
+        margin-right: 6px;
+        width: 16px;
+        text-align: center;
+    }
+    
+    /* Estilos específicos por rol */
+    .user-menu[data-role="admin"] .user-role {
+        color: #dc3545;
+    }
+    
+    .user-menu[data-role="sales"] .user-role {
+        color: #007bff;
+    }
+    
+    .user-menu[data-role="customer"] .user-role {
+        color: #28a745;
+    }
+    </style>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Mobile menu toggle

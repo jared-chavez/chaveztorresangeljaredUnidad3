@@ -3,8 +3,6 @@ import carApi from './services/carApi.js';
 // Make carApi available globally for debugging
 window.carApi = carApi;
 
-
-
 // Animation utility functions
 const animations = {
     // Add entrance animation to element
@@ -399,14 +397,14 @@ document.getElementById('car-search').addEventListener('input', function() {
 async function loadCars() {
     try {
         const cars = await carApi.getAllCars();
-        updateCarsContainer(cars);
+        await updateCarsContainer(cars);
     } catch (error) {
         showToastError(`Error al cargar autos: ${error.message}`);
     }
 }
 
 // Update cars container with new data and animations
-function updateCarsContainer(cars) {
+async function updateCarsContainer(cars) {
     const container = document.getElementById('cars-container');
     if (cars.length === 0) {
         container.innerHTML = `
@@ -418,16 +416,26 @@ function updateCarsContainer(cars) {
         animations.animateIn(container.firstElementChild);
         return;
     }
-    const carsHtml = cars.map(car => `
+    const carsHtml = cars.map(car => {
+        // Verificar si el usuario es admin o sales para mostrar botones de edición
+        const userRole = document.body.dataset.userRole || 'guest';
+        const isAdmin = userRole === 'admin';
+        const isSales = userRole === 'sales';
+        
+
+        
+        return `
         <div class="car-card-toyota" data-id="${car.id}" data-brand="${car.brand.toLowerCase()}" data-model="${car.model.toLowerCase()}">
             <div class="car-card-img-toyota">
-                <img src="${car.modelImg ? car.modelImg : 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&w=600&h=400&fit=crop'}"
+                <img src="${getCarImageUrl(car.modelImg)}"
                      alt="${car.brand} ${car.model}"
-                     onerror="this.onerror=null;this.src='https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&w=600&h=400&fit=crop';">
+                     onerror="this.onerror=null;this.src='${getDefaultCarImage()}';"
+                     loading="lazy">
             </div>
             <div class="car-card-body-toyota">
                 <div class="car-card-title-toyota">${car.brand} <span>${car.model}</span></div>
                 <div class="car-card-year-toyota">${car.year}</div>
+                ${isAdmin ? `
                 <div class="car-card-actions-toyota">
                     <button class="car-card-btn-toyota update-car-btn" data-car-id="${car.id}" title="Actualizar">
                         <i class="fas fa-pen"></i>
@@ -436,9 +444,26 @@ function updateCarsContainer(cars) {
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
+                ` : isSales ? `
+                <div class="car-card-actions-toyota">
+                    <button class="car-card-btn-toyota update-car-btn" data-car-id="${car.id}" title="Actualizar">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+                ` : `
+                <div class="car-card-actions-toyota">
+                    <button class="car-card-btn-toyota view-details-btn" data-car-id="${car.id}" title="Ver Detalles">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="car-card-btn-toyota contact-sales-btn" data-car-id="${car.id}" title="Contactar Vendedor">
+                        <i class="fas fa-phone"></i>
+                    </button>
+                </div>
+                `}
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
     container.innerHTML = carsHtml;
     const newCards = container.querySelectorAll('.car-card-toyota');
     animations.staggerAnimation(newCards, 100);
@@ -569,16 +594,120 @@ document.addEventListener('click', async function(e) {
     }
 });
 
+// Helper functions for image handling
+function getCarImageUrl(modelImg) {
+    if (!modelImg) {
+        return getDefaultCarImage();
+    }
+    
+    // If it's already a full URL, return as is
+    if (modelImg.startsWith('http://') || modelImg.startsWith('https://')) {
+        return modelImg;
+    }
+    
+    // If it's a relative path starting with /storage, make it absolute
+    if (modelImg.startsWith('/storage/')) {
+        return window.location.origin + modelImg;
+    }
+    
+    // If it's just a filename, construct the full path
+    if (!modelImg.startsWith('/')) {
+        return window.location.origin + '/storage/cars/' + modelImg;
+    }
+    
+    return modelImg;
+}
+
+function getDefaultCarImage() {
+    // Multiple fallback options for better reliability
+    const defaultImages = [
+        'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&w=600&h=400&fit=crop',
+        'https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&w=600&h=400&fit=crop',
+        'https://images.pexels.com/photos/116675/pexels-photo-116675.jpeg?auto=compress&w=600&h=400&fit=crop'
+    ];
+    
+    // Return a random default image for variety
+    return defaultImages[Math.floor(Math.random() * defaultImages.length)];
+}
+
+// Function to check if image exists
+function checkImageExists(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 Cars AJAX interface loaded successfully');
     loadCars();
+    
     // Add entrance animation to existing cards
     const existingCards = document.querySelectorAll('.car-card');
     animations.staggerAnimation(existingCards, 100);
+    
     // Add entrance animation to form
     const form = document.querySelector('.contact-form-container');
     if (form) {
         animations.animateIn(form, 200);
     }
+    
+    // Add event listeners for customer buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('view-details-btn') || e.target.closest('.view-details-btn')) {
+            e.preventDefault();
+            const btn = e.target.classList.contains('view-details-btn') ? e.target : e.target.closest('.view-details-btn');
+            const carId = btn.getAttribute('data-car-id');
+            const card = btn.closest('.car-card-toyota');
+            const brand = card.querySelector('.car-card-title-toyota').childNodes[0].textContent.trim();
+            const model = card.querySelector('.car-card-title-toyota span').textContent.trim();
+            const year = card.querySelector('.car-card-year-toyota').textContent.trim();
+            
+            Swal.fire({
+                title: `${brand} ${model}`,
+                html: `
+                    <div style="text-align: left;">
+                        <p><strong>Marca:</strong> ${brand}</p>
+                        <p><strong>Modelo:</strong> ${model}</p>
+                        <p><strong>Año:</strong> ${year}</p>
+                        <p><strong>Estado:</strong> <span style="color: #4ecdc4;">Disponible</span></p>
+                        <p><strong>Información:</strong> Este vehículo está disponible para consulta y compra.</p>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Cerrar',
+                confirmButtonColor: '#4ecdc4'
+            });
+        }
+        
+        if (e.target.classList.contains('contact-sales-btn') || e.target.closest('.contact-sales-btn')) {
+            e.preventDefault();
+            const btn = e.target.classList.contains('contact-sales-btn') ? e.target : e.target.closest('.contact-sales-btn');
+            const carId = btn.getAttribute('data-car-id');
+            const card = btn.closest('.car-card-toyota');
+            const brand = card.querySelector('.car-card-title-toyota').childNodes[0].textContent.trim();
+            const model = card.querySelector('.car-card-title-toyota span').textContent.trim();
+            
+            Swal.fire({
+                title: 'Contactar Vendedor',
+                html: `
+                    <div style="text-align: left;">
+                        <p><strong>Vehículo:</strong> ${brand} ${model}</p>
+                        <p>Para obtener más información sobre este vehículo, puedes:</p>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            <li>Llamar al: <strong>+52 55 1234 5678</strong></li>
+                            <li>Enviar email a: <strong>info@automundo.mx</strong></li>
+                            <li>Visitar nuestro concesionario</li>
+                        </ul>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#4ecdc4'
+            });
+        }
+    });
 }); 

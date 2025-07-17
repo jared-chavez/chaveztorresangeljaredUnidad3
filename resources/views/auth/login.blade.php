@@ -32,6 +32,7 @@
             <button type="submit" class="form-btn">Iniciar sesión</button>
         </form>
         <p class="form-link">¿No tienes cuenta? <a href="{{ route('register') }}">Regístrate</a></p>
+        <p class="form-link">¿Olvidaste tu contraseña? <a href="{{ route('password.recovery') }}">Recuperar contraseña</a></p>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </div>
 </div>

@@ -9,9 +9,10 @@ class CarApiService {
         this.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
         };
-        console.log('🚀 CarApiService initialized with baseUrl:', this.baseUrl);
+
     }
 
     /**
@@ -20,7 +21,7 @@ class CarApiService {
      */
     async getAllCars() {
         try {
-            console.log('🔄 Fetching all cars...');
+    
             
             const response = await fetch(this.baseUrl, {
                 method: 'GET',
@@ -32,11 +33,11 @@ class CarApiService {
             }
 
             const cars = await response.json();
-            console.log('✅ Cars fetched successfully:', cars);
+
             
             return cars;
         } catch (error) {
-            console.error('❌ Error fetching cars:', error);
+
             throw error;
         }
     }
@@ -83,7 +84,11 @@ class CarApiService {
             console.log('🔄 Creating new car:', carData);
             let options = {
                 method: 'POST',
-                headers: isFormData ? { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } : this.headers,
+                headers: isFormData ? { 
+                    'Accept': 'application/json', 
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                } : this.headers,
                 body: isFormData ? carData : JSON.stringify(carData)
             };
             const response = await fetch(this.baseUrl, options);
@@ -114,7 +119,11 @@ class CarApiService {
             if (isFormData) {
                 options = {
                     method: 'POST', // Laravel expects POST with _method=PUT for file upload
-                    headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    headers: { 
+                        'Accept': 'application/json', 
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
                     body: carData
                 };
             } else {

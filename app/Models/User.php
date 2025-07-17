@@ -84,14 +84,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user is manager
-     */
-    public function isManager(): bool
-    {
-        return $this->hasRole('manager');
-    }
-
-    /**
      * Check if user is sales
      */
     public function isSales(): bool
@@ -114,7 +106,6 @@ class User extends Authenticatable
     {
         return match($this->role) {
             'admin' => 'Administrador',
-            'manager' => 'Gerente',
             'sales' => 'Vendedor',
             'customer' => 'Cliente',
             default => 'Usuario'
@@ -128,7 +119,6 @@ class User extends Authenticatable
     {
         return match($this->role) {
             'admin' => '/admin/dashboard',
-            'manager' => '/manager/dashboard',
             'sales' => '/sales/dashboard',
             'customer' => '/dashboard',
             default => '/'
